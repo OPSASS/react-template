@@ -58,21 +58,22 @@ const CounterInput = (props: Props) => {
   const [unit, setUnit] = useState<string>(intParsed.unit);
   const [inputValue, setInputValue] = useState<number>(intParsed.value);
 
-  const currentInputValue = isControlled
-    ? parseValue(value!).value
-    : inputValue;
+  const valueParsed = parseValue(value || "");
 
-  const currentUnitValue = isControlled ? parseValue(value!).unit : unit;
+  const currentInputValue = isControlled ? valueParsed.value : inputValue;
+
+  const currentUnitValue = isControlled ? valueParsed.unit : unit;
 
   useEffect(() => {
-    if (isControlled && value) {
-      const parsed = parseValue(value);
-      if (!isControlled) {
-        setUnit(parsed.unit);
-        setInputValue(parsed.value);
-      }
+    onChange?.(`${currentInputValue}${currentUnitValue}`);
+  }, []);
+
+  useEffect(() => {
+    if (isControlled) {
+      setUnit(valueParsed.unit);
+      setInputValue(valueParsed.value);
     }
-  }, [value, isControlled, parseValue]);
+  }, [isControlled]);
 
   const handleChangeUnit = useCallback(
     (v: string) => {
@@ -82,23 +83,20 @@ const CounterInput = (props: Props) => {
         adjustedValue = Math.min(100, Math.max(0, currentInputValue));
       }
 
+      onChange?.(`${adjustedValue}${v}`);
       setUnit(v);
       setInputValue(adjustedValue);
-
-      onChange?.(`${adjustedValue}${v}`);
     },
     [currentInputValue, onChange]
   );
 
   const handleChangeValue = useCallback(
     (newValue: number) => {
-      if (!isControlled) {
-        setInputValue(newValue);
-      }
+      setInputValue(newValue);
 
       onChange?.(`${newValue}${unit}`);
     },
-    [unit, isControlled, onChange]
+    [unit, onChange]
   );
 
   return (
