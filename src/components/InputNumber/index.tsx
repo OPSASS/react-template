@@ -115,11 +115,9 @@ const InputNumber = (props: InputNumberProps) => {
 
   const handleChange = useCallback(
     (val: string) => {
-      if (!isControlled) {
         setInputValue(val.replace(",", "."));
-      }
     },
-    [isControlled]
+    []
   );
 
   const finalizeValue = useCallback(() => {
