@@ -77,8 +77,7 @@ const InputNumber = (props: InputNumberProps) => {
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const isControlled = value !== undefined;
-  const [internalValue, setInternalValue] = useState(defaultValue);
-  const currentValue = isControlled ? value : internalValue;
+  const currentValue = isControlled ? value : defaultValue;
 
   const [inputValue, setInputValue] = useState(String(currentValue));
 
@@ -114,9 +113,14 @@ const InputNumber = (props: InputNumberProps) => {
     [min, max]
   );
 
-  const handleChange = useCallback((val: string) => {
-    setInputValue(val.replace(",", "."));
-  }, []);
+  const handleChange = useCallback(
+    (val: string) => {
+      if (!isControlled) {
+        setInputValue(val.replace(",", "."));
+      }
+    },
+    [isControlled]
+  );
 
   const finalizeValue = useCallback(() => {
     const result = normalizeValue(inputValue);
@@ -141,10 +145,8 @@ const InputNumber = (props: InputNumberProps) => {
       if (min !== undefined) newValue = Math.max(min, newValue);
       if (max !== undefined) newValue = Math.min(max, newValue);
 
-      setInputValue(String(newValue));
-
       if (!isControlled) {
-        setInternalValue(newValue);
+        setInputValue(String(newValue));
       }
       onChange?.(newValue);
       setFocused(true);
