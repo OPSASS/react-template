@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-default: #151515;
+  --color-primary: #3c67ff;
+  --color-input: #212121;
+  --color-input-hover: #3b3b3b;
+  --color-input-active: #3b3b3b;
+  --color-tx-default: #f9f9f9;
+  --color-tx-primary: #3c67ff;
+  --color-tx-secondary: #aaaaaa;
+}
